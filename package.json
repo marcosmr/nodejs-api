@@ -2,17 +2,17 @@
 	"name": "API",
 	"dependencies":
 	{
-		"aws-sdk": "*",
-		"base64url": "*",
-		"bcrypt": "*",
-		"bluebird": "*",
-		"body-parser": "*",
 		"express": "*",
-		"forever": "*",
-		"jwt-simple": "*",
+		"body-parser": "*",
 		"mongoose": "*",
+		"bluebird": "*",
+		"bcrypt": "*",
+		"base64url": "*",
+		"jwt-simple": "*",
+		"node-cron": "*",
+		"socket.io": "*",
 		"multer": "*",
-		"sendgrid": "*",
-		"socket.io": "*"
+		"aws-sdk": "*",
+		"sendgrid": "*"
 	}
 }
