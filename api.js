@@ -4,26 +4,59 @@ function init(server, path)
 	var content = require(path + '/content');
 	var libpath = './components';
 
-	var values = require(path + '/values');
-	var liberror = require(libpath + '/error');
+	var logger = require(libpath + '/logger').get(config);
+	logger.pid(process.pid);
+
+
+	if(!config.database || !config.database.component)
+	{
+		logger.error("database configuration is required");
+		process.exit(1);
+	}
+
+	if(!config.auth || !config.auth.component)
+	{
+		logger.error("auth configuration is required");
+		process.exit(1);
+	}
+
+	if(!content.roles)
+	{
+		logger.error("roles data is required");
+		process.exit(1);
+	}
+
+
 	var custom_errors = require(path + '/errors');
-	var errors = liberror.get(config, custom_errors);
-	var liblogger = require(libpath + '/logger');
-	var logger = liblogger.get(config);
-	var form = require(libpath + '/form');
+	var errors = require(libpath + '/error').get(config, custom_errors);
+	var values = require(path + '/values');
+	var roles = content.roles;
 
 	var app = {};
 	app.path = path;
-	app.secret = config.secret;
-	app.roles = content.roles;
-	app.values = values;
-	app.errors = errors;
 	app.logger = logger;
-	app.logger.pid(process.pid);
+	app.errors = errors;
+	app.values = values;
+	app.roles = roles;
+	app.models = {};
+	app.controllers = {};
+	app.helpers = {};
+
+
+	var database = require(libpath + '/database_' + config.database.component);
+	app.database = database.get(config.database, errors, logger);
+	logger.info("api database -> " + config.database.component);
+
+	var auth = require(libpath + '/auth_' + config.auth.component);
+	app.auth = auth.get(config.auth, app.database, errors, logger);
+	app.models.user = app.auth.model;
+	app.controllers.user = app.auth.controller;
+	logger.info("api auth -> " + config.auth.component);
+
+	var form = require(libpath + '/form');
 	app.form = form.get(config, errors, logger);
 
-
-	var modules = ['database', 'email', 'media', 'notifications', 'payment'];
+	var modules = ['email', 'media', 'notifications', 'payment'];
 	for(m in modules)
 	{
 		var module = modules[m];
@@ -36,7 +69,7 @@ function init(server, path)
 			{
 				var lib = require(libpath + '/' + module + '_' + component);
 				app[module] = lib.get(config[module], errors, logger);
-				app.logger.info("api " + module + " = " + component);
+				logger.info("api " + module + " -> " + component);
 			}
 		}
 	}
@@ -45,55 +78,22 @@ function init(server, path)
 	if(content.models && content.models.length > 0)
 	{
 		logger.info("models init");
-
-		var models = {};
 		for(m in content.models)
 		{
 			var model = content.models[m];
-			models[model] = require(path + '/models/' + model)(app);
-
+			app.models[model] = require(path + '/models/' + model)(app);
 			logger.info("model loaded: " + model);
 		}
-
 		logger.info("models loaded");
 
-		app.models = models;
-	}
-
-	if(content.models && content.models.length > 0)
-	{
 		logger.info("controllers init");
-
-		var controllers = {};
 		for(c in content.models)
 		{
 			var controller = content.models[c];
-			controllers[controller] = require(path + '/controllers/' + controller)(app);
-
+			app.controllers[controller] = require(path + '/controllers/' + controller)(app);
 			logger.info("controller loaded: " + controller);
 		}
-
 		logger.info("controllers loaded");
-
-		app.controllers = controllers;
-	}
-
-	if(content.helpers && content.helpers.length > 0)
-	{
-		logger.info("helpers init");
-
-		var helpers = {};
-		for(h in content.helpers)
-		{
-			var helper = content.helpers[h];
-			helpers[helper] = require(path + '/helpers/' + helper)(app);
-
-			logger.info("helper loaded: " + helper);
-		}
-
-		logger.info("helpers loaded");
-
-		app.helpers = helpers;
 	}
 
 	if(content.services && content.services.length > 0)
@@ -104,7 +104,6 @@ function init(server, path)
 		app.router = express.Router();
 
 		logger.info("services init");
-
 		for(s in content.services)
 		{
 			var service = content.services[s];
@@ -112,6 +111,7 @@ function init(server, path)
 
 			logger.info("service loaded: " + service);
 		}
+		logger.info("services loaded");
 
 		var not_found_response = function(req, res)
 		{
@@ -121,8 +121,6 @@ function init(server, path)
 		app.router.get('*', not_found_response);
 		app.router.post('*', not_found_response);
 		server.use(serverpath, app.router);
-
-		logger.info("services loaded");
 	}
 
 	if(content.tasks && content.tasks.length > 0)
@@ -131,7 +129,6 @@ function init(server, path)
 		app.cron = cron;
 
 		logger.info("tasks init");
-
 		for(t in content.tasks)
 		{
 			var task = content.tasks[t];
@@ -139,12 +136,22 @@ function init(server, path)
 
 			logger.info("task loaded: " + task);
 		}
-
 		logger.info("tasks loaded");
 	}
 
+	if(content.helpers && content.helpers.length > 0)
+	{
+		logger.info("helpers init");
+		for(h in content.helpers)
+		{
+			var helper = content.helpers[h];
+			app.helpers[helper] = require(path + '/helpers/' + helper)(app);
+			logger.info("helper loaded: " + helper);
+		}
+		logger.info("helpers loaded");
+	}
 
-	if(app.database) app.database.connect();
+	app.database.connect();
 }
 
 module.exports.init = init;
