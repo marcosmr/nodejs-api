@@ -18,6 +18,7 @@ function get(config, database, errors, logger)
 
 	var model = require('./auth_mongodb_user_model').get(database);
 	var controller = require('./auth_mongodb_user_controller').get(model, errors, logger);
+	var User = controller;
 
 
 	var getToken = function(headers)
@@ -78,7 +79,7 @@ function get(config, database, errors, logger)
 				return;
 			}
 
-			model.authorize(params, res, function(user)
+			User.authorize(params, res, function(user)
 			{
 				endpoint(req, res, user);
 			});
