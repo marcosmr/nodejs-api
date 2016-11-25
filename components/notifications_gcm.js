@@ -51,6 +51,7 @@ function get(config, errors, logger)
 			response.on("end", function()
 			{
 				var response = JSON.parse(content);
+				if(response.failure == 1) logger.error(response.results[0].error);
 				callback(response);
 			});
 		});
