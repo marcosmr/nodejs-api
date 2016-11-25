@@ -41,6 +41,7 @@ function init(server, path)
 	app.models = {};
 	app.controllers = {};
 	app.helpers = {};
+	app.io = server.io;
 
 
 	var database = require(libpath + '/database_' + config.database.component);

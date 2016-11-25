@@ -56,6 +56,7 @@ function init(path)
 			logger.info("server started at port " + port);
 		};
 
+		var server_instance;
 		if(config.ssl && config.ssl.enabled)
 		{
 			var fs = require('fs');
@@ -67,11 +68,17 @@ function init(path)
 				cert: fs.readFileSync(config.ssl.cert)
 			};
 
-			https.createServer(options, server).listen(port, callback);
+			server_instance = https.createServer(options, server).listen(port, callback);
 		}
 		else
 		{
-			server.listen(port, callback);
+			server_instance = server.listen(port, callback);
+		}
+
+		if(config.io)
+		{
+			var io = require('socket.io');
+			server.io = io.listen(server_instance);
 		}
 
 		var api = require('./api');
