@@ -48,7 +48,13 @@ function get(config, errors, logger)
 		});
 	}
 
+	var getPath = function(media_url)
+	{
+		return media_url.replace(url, "");
+	}
+
 	component.upload = uploadMedia;
+	component.path = getPath;
 
 	return component;
 }
