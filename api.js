@@ -64,12 +64,14 @@ function init(server, path)
 
 		if(config[module])
 		{
-			var component = config[module].component;
+			var config_module = config[module];
+			var component = config_module.component;
 
 			if(component && component.length > 0)
 			{
+				config_module.path = path;
 				var lib = require(libpath + '/' + module + '_' + component);
-				app[module] = lib.get(config[module], errors, logger);
+				app[module] = lib.get(config_module, errors, logger);
 				logger.info("api " + module + " -> " + component);
 			}
 		}
