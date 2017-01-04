@@ -38,6 +38,8 @@ function get(config, errors, logger)
 				title: data.title,
 				body: data.message
 			},
+			badge: 1,
+			sound: "default",
 			priority: "high",
 			content_available: true
 		};
