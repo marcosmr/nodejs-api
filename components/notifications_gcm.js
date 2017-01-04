@@ -36,10 +36,10 @@ function get(config, errors, logger)
 			notification:
 			{
 				title: data.title,
-				body: data.message
+				body: data.message,
+				sound: "default",
+				badge: "1"
 			},
-			badge: 1,
-			sound: "default",
 			priority: "high",
 			content_available: true
 		};
