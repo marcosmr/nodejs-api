@@ -48,12 +48,34 @@ function get(config, errors, logger)
 		});
 	}
 
+	var deleteMedia = function(params, res, callback)
+	{
+		var options =
+		{
+			Bucket: container,
+			Key: getPath(params.filename)
+		}
+
+		s3.deleteObject(options, function(error, data)
+		{
+			if(error)
+			{
+				logger.error(error);
+				errors(res, 'upload_error');
+				return;
+			}
+
+			callback();
+		});
+	}
+
 	var getPath = function(media_url)
 	{
 		return media_url.replace(url, "");
 	}
 
 	component.upload = uploadMedia;
+	component.delete = deleteMedia;
 	component.path = getPath;
 
 	return component;
