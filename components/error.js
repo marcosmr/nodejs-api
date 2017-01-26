@@ -161,7 +161,7 @@ function get(config, custom_errors)
 		},
 		upload_error:
 		{
-			code:500,
+			code: 500,
 			msg:
 			{
 				en: "upload error",
@@ -269,7 +269,7 @@ function get(config, custom_errors)
 		},
 		object_not_created:
 		{
-			code:500,
+			code: 500,
 			msg:
 			{
 				en: "object not created",
@@ -314,11 +314,146 @@ function get(config, custom_errors)
 		},
 		email_missing:
 		{
-			code:422,
+			code: 422,
 			msg:
 			{
 				en: "email missing",
 				es: "Se require el correo"
+			}
+		},
+		payment_card_declined:
+		{
+			code: 403,
+			msg:
+			{
+				en: "card declined",
+				es: "La tarjeta fue declinada"
+			}
+		},
+		payment_expired_card:
+		{
+			code: 403,
+			msg:
+			{
+				en: "expired card",
+				es: "La tarjeta ha expirado"
+			}
+		},
+		payment_insufficient_funds:
+		{
+			code: 403,
+			msg:
+			{
+				en: "insufficient funds",
+				es: "La tarjeta no tiene fondos suficientes"
+			}
+		},
+		payment_suspected_fraud:
+		{
+			code: 403,
+			msg:
+			{
+				en: "suspected fraud",
+				es: "Se ha detectado un comportamiento sospechoso en la transacción"
+			}
+		},
+		payment_invalid_number:
+		{
+			code: 403,
+			msg:
+			{
+				en: "invalid number",
+				es: "El número de tarjeta no es válido"
+			}
+		},
+		payment_invalid_expiry_month:
+		{
+			code: 403,
+			msg:
+			{
+				en: "invalid expiry month",
+				es: "El mes de expiración no es válido"
+			}
+		},
+		payment_invalid_expiry_year:
+		{
+			code: 403,
+			msg:
+			{
+				en: "invalid expiry year",
+				es: "El año de expiración no es válido"
+			}
+		},
+		payment_invalid_cvc:
+		{
+			code: 403,
+			msg:
+			{
+				en: "invalid cvc",
+				es: "El CVC no es válido"
+			}
+		},
+		payment_invalid_amount:
+		{
+			code: 403,
+			msg:
+			{
+				en: "invalid amount",
+				es: "La cantidad no es válida"
+			}
+		},
+		payment_invalid_payment_type:
+		{
+			code: 403,
+			msg:
+			{
+				en: "invalid payment type",
+				es: "El tipo de pago no es válido"
+			}
+		},
+		payment_unsupported_currency:
+		{
+			code: 403,
+			msg:
+			{
+				en: "unsupported currency",
+				es: "El tipo de divisa no es válido"
+			}
+		},
+		payment_missing_description:
+		{
+			code: 403,
+			msg:
+			{
+				en: "missing description",
+				es: "No se ha proporcionado una descripción del cargo"
+			}
+		},
+		payment_processing_error:
+		{
+			code: 403,
+			msg:
+			{
+				en: "processing error",
+				es: "Se ha detectado un comportamiento sospechoso en la cuenta"
+			}
+		},
+		payment_not_found:
+		{
+			code: 404,
+			msg:
+			{
+				en: "payment not found",
+				es: "No se ha encontrado la cuenta de pago"
+			}
+		},
+		payment_error:
+		{
+			code: 500,
+			msg:
+			{
+				en: "payment error",
+				es: "Ha ocurrido un error al procesar el pago"
 			}
 		},
 		error:

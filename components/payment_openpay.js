@@ -65,7 +65,7 @@ function get(config, errors, logger)
 			var content = "";
 			response.setEncoding('utf8');
 			response.on('data', function(part){ content += part; });
-			response.on('error', function(error){ logger.error(error); errors(res, 'internal_error') });
+			response.on('error', function(error){ logger.error(error); errors(res, 'payment_error') });
 			response.on('end', function()
 			{
 				var response = JSON.parse(content);

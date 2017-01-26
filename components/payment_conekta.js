@@ -119,7 +119,7 @@ function get(config, errors, logger)
 			var content = "";
 			response.setEncoding('utf8');
 			response.on('data', function(part){ content += part; });
-			response.on('error', function(error){ logger.error(error); errors(res, 'internal_error') });
+			response.on('error', function(error){ logger.error(error); errors(res, 'payment_error') });
 			response.on('end', function()
 			{
 				var response = JSON.parse(content);
@@ -127,8 +127,25 @@ function get(config, errors, logger)
 				if(response.object == "error")
 				{
 					logger.error(response.message);
-					if(response.type == "resource_not_found_error") errors(res, 'not_found');
-					else errors(res, 'internal_error');
+					if(response.type == "resource_not_found_error") errors(res, 'payment_not_found');
+					else if(response.code)
+					{
+						if(response.code == "card_declined") errors(res, 'payment_card_declined');
+						else if(response.code == "expired_card") errors(res, 'payment_expired_card');
+						else if(response.code == "insufficient_funds") errors(res, 'payment_insufficient_funds');
+						else if(response.code == "suspected_fraud") errors(res, 'payment_suspected_fraud');
+						else if(response.code == "invalid_number") errors(res, 'payment_invalid_number');
+						else if(response.code == "invalid_expiry_month") errors(res, 'payment_invalid_expiry_month');
+						else if(response.code == "invalid_expiry_year") errors(res, 'payment_invalid_expiry_year');
+						else if(response.code == "invalid_cvc") errors(res, 'payment_invalid_cvc');
+						else if(response.code == "invalid_amount") errors(res, 'payment_invalid_amount');
+						else if(response.code == "invalid_payment_type") errors(res, 'payment_invalid_payment_type');
+						else if(response.code == "unsupported_currency") errors(res, 'payment_unsupported_currency');
+						else if(response.code == "missing_description") errors(res, 'payment_missing_description');
+						else if(response.code == "processing_error") errors(res, 'payment_processing_error');
+						else errors(res, 'payment_error');
+					}
+					else errors(res, 'payment_error');
 					return;
 				}
 
