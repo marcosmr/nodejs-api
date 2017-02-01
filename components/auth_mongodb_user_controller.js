@@ -277,6 +277,21 @@ function get(model, errors, logger)
 		});
 	}
 
+	var deleteUser = function(user, res, callback)
+	{
+		user.remove(function(error)
+		{
+			if(error)
+			{
+				logger.error(error);
+				errors(res, 'user_not_deleted');
+				return;
+			}
+
+			callback(user);
+		});
+	}
+
 	controller.authorize = authorizeUser;
 	controller.new = newUser;
 	controller.update = updateUser;
@@ -285,6 +300,7 @@ function get(model, errors, logger)
 	controller.token = tokenUser;
 	controller.login = loginUser;
 	controller.social_login = socialLoginUser;
+	controller.delete = deleteUser;
 
 	return controller;
 }
