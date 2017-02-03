@@ -29,17 +29,20 @@ function get(config, errors, logger)
 	{
 		var data = params.data;
 
+		var notification_data =
+		{
+			title: data.title,
+			body: data.message,
+			sound: "default"
+		};
+		if(params.sound) notification_data.sound = params.sound;
+		if(params.badge) notification_data.badge = params.badge;
+
 		var notification =
 		{
 			to: params.to,
 			data: data,
-			notification:
-			{
-				title: data.title,
-				body: data.message,
-				sound: "default",
-				badge: "1"
-			},
+			notification: notification_data,
 			priority: "high",
 			content_available: true
 		};
