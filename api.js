@@ -99,6 +99,18 @@ function init(server, path)
 		logger.info("controllers loaded");
 	}
 
+	if(content.helpers && content.helpers.length > 0)
+	{
+		logger.info("helpers init");
+		for(h in content.helpers)
+		{
+			var helper = content.helpers[h];
+			app.helpers[helper] = require(path + '/helpers/' + helper)(app);
+			logger.info("helper loaded: " + helper);
+		}
+		logger.info("helpers loaded");
+	}
+
 	if(content.services && content.services.length > 0)
 	{
 		var serverpath = config.serverpath ? config.serverpath : '';
@@ -140,18 +152,6 @@ function init(server, path)
 			logger.info("task loaded: " + task);
 		}
 		logger.info("tasks loaded");
-	}
-
-	if(content.helpers && content.helpers.length > 0)
-	{
-		logger.info("helpers init");
-		for(h in content.helpers)
-		{
-			var helper = content.helpers[h];
-			app.helpers[helper] = require(path + '/helpers/' + helper)(app);
-			logger.info("helper loaded: " + helper);
-		}
-		logger.info("helpers loaded");
 	}
 
 	app.database.connect();
