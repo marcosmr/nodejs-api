@@ -155,6 +155,21 @@ function get(config, errors, logger)
 		});
 	}
 
+	var aggregateCollection = function(Model, query, res, callback)
+	{
+		Model.aggregate(query.aggregation, function(error, collection)
+		{
+			if(error)
+			{
+				logger.error(error);
+				errors(res, 'database_error');
+				return;
+			}
+
+			callback(collection);
+		});
+	}
+
 	var deleteObject = function(object, res, callback)
 	{
 		object.remove(function(error)
@@ -193,6 +208,7 @@ function get(config, errors, logger)
 	component.findCollection = findCollection;
 	component.updateObject = updateObject;
 	component.updateCollection = updateCollection;
+	component.aggregateCollection = aggregateCollection;
 	component.deleteObject = deleteObject;
 	component.deleteCollection = deleteCollection;
 
