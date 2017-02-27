@@ -166,7 +166,24 @@ function get(config, errors, logger)
 				return;
 			}
 
-			callback(collection);
+			if(query.population)
+			{
+				Model.populate(collection, query.population, function(error, collection)
+				{
+					if(error)
+					{
+						logger.error(error);
+						errors(res, 'database_error');
+						return;
+					}
+
+					callback(collection);
+				});
+			}
+			else
+			{
+				callback(collection);
+			}
 		});
 	}
 
