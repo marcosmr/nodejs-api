@@ -166,7 +166,14 @@ function get(config, errors, logger)
 				return;
 			}
 
-			callback(collection);
+			if(query.population)
+			{
+				Model.populate(collection, query.population, callback);
+			}
+			else
+			{
+				callback(collection);
+			}
 		});
 	}
 
