@@ -476,7 +476,7 @@ function get(config, custom_errors)
 		}
 	}
 
-	var errorResponse = function(res, e_type, e_lang)
+	var errorResponse = function(res, e_type, e_lang, e_subs)
 	{
 		var language = e_lang ? e_lang : default_lang;
 		if(languages.indexOf(language) < 0) language = default_lang;
@@ -484,13 +484,25 @@ function get(config, custom_errors)
 		var type = e_type ? e_type : default_error;
 		if(!errors[type]) type = default_error;
 
+		var code = errors[type].code;
+		var msg = errors[type].msg[language];
+
+		if(e_subs)
+		{
+			for(sub in e_subs)
+			{
+				var value = e_subs[sub];
+				msg = msg.replace(sub, value);
+			}
+		}
+
 		var error =
 		{
-			code: errors[type].code,
-			msg: errors[type].msg[language]
+			code: code,
+			msg: msg
 		};
 
-		if(res) res.status(error.code).send(error);
+		if(res) res.status(code).send(error);
 
 		return error;
 	}
