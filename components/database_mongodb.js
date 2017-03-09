@@ -155,6 +155,21 @@ function get(config, errors, logger)
 		});
 	}
 
+	var countCollection = function(Model, query, res, callback)
+	{
+		Model.count(query.params, function(error, count)
+		{
+			if(error)
+			{
+				logger.error(error);
+				errors(res, 'database_error');
+				return;
+			}
+
+			callback(count);
+		});
+	}
+
 	var aggregateCollection = function(Model, query, res, callback)
 	{
 		Model.aggregate(query.aggregation, function(error, collection)
@@ -225,6 +240,7 @@ function get(config, errors, logger)
 	component.findCollection = findCollection;
 	component.updateObject = updateObject;
 	component.updateCollection = updateCollection;
+	component.countCollection = countCollection;
 	component.aggregateCollection = aggregateCollection;
 	component.deleteObject = deleteObject;
 	component.deleteCollection = deleteCollection;
