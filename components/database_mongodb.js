@@ -37,7 +37,7 @@ function get(config, errors, logger)
 		});
 	}
 
-	var newObject = function(Model, data, res, callback)
+	var newObject = function(Model, data, res, callback, callback_error)
 	{
 		var object = new Model(data);
 		object.save(function(error)
@@ -45,7 +45,8 @@ function get(config, errors, logger)
 			if(error)
 			{
 				logger.error(error);
-				errors(res, 'object_not_created');
+				if(callback_error) callback_error(error);
+				else errors(res, 'object_not_created');
 				return;
 			}
 
@@ -63,7 +64,7 @@ function get(config, errors, logger)
 		});
 	}
 
-	var findObject = function(Model, query, res, callback)
+	var findObject = function(Model, query, res, callback, callback_error)
 	{
 		var search = query.id ? Model.findById(query.id) : Model.findOne(query.params);
 		if(query.selection) search = search.select(query.selection);
@@ -76,7 +77,8 @@ function get(config, errors, logger)
 			if(error)
 			{
 				logger.error(error);
-				errors(res, 'database_error');
+				if(callback_error) callback_error(error);
+				else errors(res, 'database_error');
 				return;
 			}
 
@@ -84,7 +86,8 @@ function get(config, errors, logger)
 			{
 				if(!object || !object.is_active)
 				{
-					errors(res, 'object_not_found');
+					if(callback_error) callback_error();
+					else errors(res, 'object_not_found');
 					return;
 				}
 			}
@@ -93,7 +96,7 @@ function get(config, errors, logger)
 		});
 	}
 
-	var findCollection = function(Model, query, res, callback)
+	var findCollection = function(Model, query, res, callback, callback_error)
 	{
 		var params = query.params;
 		params.is_active = true;
@@ -109,13 +112,15 @@ function get(config, errors, logger)
 			if(error)
 			{
 				logger.error(error);
-				errors(res, 'database_error');
+				if(callback_error) callback_error(error);
+				else errors(res, 'database_error');
 				return;
 			}
 
 			if(!collection)
 			{
-				errors(res, 'object_not_found');
+				if(callback_error) callback_error();
+				else errors(res, 'object_not_found');
 				return;
 			}
 
@@ -123,14 +128,15 @@ function get(config, errors, logger)
 		});
 	}
 
-	var updateObject = function(object, res, callback)
+	var updateObject = function(object, res, callback, callback_error)
 	{
 		object.save(function(error)
 		{
 			if(error)
 			{
 				logger.error(error);
-				errors(res, 'object_not_saved');
+				if(callback_error) callback_error(error);
+				else errors(res, 'object_not_saved');
 				return;
 			}
 
@@ -138,7 +144,7 @@ function get(config, errors, logger)
 		});
 	}
 
-	var updateCollection = function(Model, query, res, callback)
+	var updateCollection = function(Model, query, res, callback, callback_error)
 	{
 		var options = {multi:true};
 
@@ -147,7 +153,8 @@ function get(config, errors, logger)
 			if(error)
 			{
 				logger.error(error);
-				errors(res, 'database_error');
+				if(callback_error) callback_error(error);
+				else errors(res, 'database_error');
 				return;
 			}
 
@@ -155,14 +162,15 @@ function get(config, errors, logger)
 		});
 	}
 
-	var countCollection = function(Model, query, res, callback)
+	var countCollection = function(Model, query, res, callback, callback_error)
 	{
 		Model.count(query.params, function(error, count)
 		{
 			if(error)
 			{
 				logger.error(error);
-				errors(res, 'database_error');
+				if(callback_error) callback_error(error);
+				else errors(res, 'database_error');
 				return;
 			}
 
@@ -170,14 +178,15 @@ function get(config, errors, logger)
 		});
 	}
 
-	var aggregateCollection = function(Model, query, res, callback)
+	var aggregateCollection = function(Model, query, res, callback, callback_error)
 	{
 		Model.aggregate(query.aggregation, function(error, collection)
 		{
 			if(error)
 			{
 				logger.error(error);
-				errors(res, 'database_error');
+				if(callback_error) callback_error(error);
+				else errors(res, 'database_error');
 				return;
 			}
 
@@ -188,7 +197,8 @@ function get(config, errors, logger)
 					if(error)
 					{
 						logger.error(error);
-						errors(res, 'database_error');
+						if(callback_error) callback_error(error);
+						else errors(res, 'database_error');
 						return;
 					}
 
@@ -202,14 +212,15 @@ function get(config, errors, logger)
 		});
 	}
 
-	var deleteObject = function(object, res, callback)
+	var deleteObject = function(object, res, callback, callback_error)
 	{
 		object.remove(function(error)
 		{
 			if(error)
 			{
 				logger.error(error);
-				errors(res, 'object_not_deleted');
+				if(callback_error) callback_error(error);
+				else errors(res, 'object_not_deleted');
 				return;
 			}
 
@@ -217,14 +228,15 @@ function get(config, errors, logger)
 		});
 	}
 
-	var deleteCollection = function(Model, query, res, callback)
+	var deleteCollection = function(Model, query, res, callback, callback_error)
 	{
 		Model.remove(query.params, function(error)
 		{
 			if(error)
 			{
 				logger.error(error);
-				errors(res, 'database_error');
+				if(callback_error) callback_error(error);
+				else errors(res, 'database_error');
 				return;
 			}
 
