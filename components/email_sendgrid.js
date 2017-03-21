@@ -28,7 +28,7 @@ function get(config, errors, logger)
 	var sendgrid = require('sendgrid')(apikey);
 
 
-	var sendEmail = function(params, res, callback)
+	var sendEmail = function(params, res, callback, callback_error)
 	{
 		var from_data = params.from ? params.from : default_from;
 
@@ -61,7 +61,8 @@ function get(config, errors, logger)
 			if(error)
 			{
 				logger.error(error);
-				errors(res, 'mail_error');
+				if(callback_error) callback_error(error);
+				else errors(res, 'mail_error');
 				return;
 			}
 

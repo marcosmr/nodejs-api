@@ -168,6 +168,15 @@ function get(config, custom_errors)
 				es: "Ha ocurrido un error al subir el recurso"
 			}
 		},
+		conversion_error:
+		{
+			code: 500,
+			msg:
+			{
+				en: "conversion error",
+				es: "Ha ocurrido un error al convertir los datos"
+			}
+		},
 		role_unauthorized:
 		{
 			code: 401,

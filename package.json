@@ -9,6 +9,7 @@
 		"bcrypt": "*",
 		"base64url": "*",
 		"jwt-simple": "*",
+		"json2csv": "*",
 		"node-cron": "*",
 		"socket.io": "*",
 		"multer": "*",

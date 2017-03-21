@@ -23,7 +23,7 @@ function get(config, errors, logger)
 	var https = require('https');
 
 
-	var createAccount = function(params, res, callback)
+	var createAccount = function(params, res, callback, callback_error)
 	{
 		var name = params.name;
 		var email = params.email;
@@ -40,13 +40,10 @@ function get(config, errors, logger)
 			}
 		};
 
-		sendRequest(options, res, function(data)
-		{
-			callback(data);
-		});
+		sendRequest(options, res, callback, callback_error);
 	}
 
-	var sendRequest = function(params, res, callback)
+	var sendRequest = function(params, res, callback, callback_error)
 	{
 		var options =
 		{
@@ -65,7 +62,12 @@ function get(config, errors, logger)
 			var content = "";
 			response.setEncoding('utf8');
 			response.on('data', function(part){ content += part; });
-			response.on('error', function(error){ logger.error(error); errors(res, 'payment_error') });
+			response.on('error', function(error)
+			{
+				logger.error(error);
+				if(callback_error) callback_error(error);
+				else errors(res, 'payment_error')
+			});
 			response.on('end', function()
 			{
 				var response = JSON.parse(content);

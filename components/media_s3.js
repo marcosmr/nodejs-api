@@ -25,7 +25,7 @@ function get(config, errors, logger)
 	var url = "https://" + container + ".s3.amazonaws.com/";
 
 
-	var uploadMedia = function(params, res, callback)
+	var uploadMedia = function(params, res, callback, callback_error)
 	{
 		var options =
 		{
@@ -40,7 +40,8 @@ function get(config, errors, logger)
 			if(error)
 			{
 				logger.error(error);
-				errors(res, 'upload_error');
+				if(callback_error) callback_error(error);
+				else errors(res, 'upload_error');
 				return;
 			}
 
@@ -48,7 +49,7 @@ function get(config, errors, logger)
 		});
 	}
 
-	var deleteMedia = function(params, res, callback)
+	var deleteMedia = function(params, res, callback, callback_error)
 	{
 		var options =
 		{
@@ -60,8 +61,8 @@ function get(config, errors, logger)
 		{
 			if(error)
 			{
-				logger.error(error);
-				errors(res, 'upload_error');
+				if(callback_error) callback_error(error);
+				else errors(res, 'upload_error');
 				return;
 			}
 
