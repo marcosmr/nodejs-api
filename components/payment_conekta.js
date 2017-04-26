@@ -123,10 +123,17 @@ function get(config, errors, logger)
 				if(response.object == "error")
 				{
 					logger.error(response.message);
-					if(callback_error) callback_error(response);
+
+					if(callback_error)
+					{
+						callback_error(response);
+					}
 					else
 					{
-						if(response.type == "resource_not_found_error") errors(res, 'payment_not_found');
+						if(response.type == "resource_not_found_error")
+						{
+							errors(res, 'payment_not_found');
+						}
 						else if(response.code)
 						{
 							if(response.code == "card_declined") errors(res, 'payment_card_declined');
@@ -144,9 +151,12 @@ function get(config, errors, logger)
 							else if(response.code == "processing_error") errors(res, 'payment_processing_error');
 							else errors(res, 'payment_error');
 						}
-						else errors(res, 'payment_error');
-						return;
+						else
+						{
+							errors(res, 'payment_error');
+						}
 					}
+					return;
 				}
 
 				callback(response);
