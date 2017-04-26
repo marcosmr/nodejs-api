@@ -84,11 +84,21 @@ function get(config, errors, logger)
 
 			if(!query.nullable)
 			{
-				if(!object || !object.is_active)
+				if(!object)
 				{
 					if(callback_error) callback_error();
 					else errors(res, 'object_not_found');
 					return;
+				}
+
+				if(!query.inactive)
+				{
+					if(!object.is_active)
+					{
+						if(callback_error) callback_error();
+						else errors(res, 'object_not_found');
+						return;
+					}
 				}
 			}
 
@@ -99,7 +109,7 @@ function get(config, errors, logger)
 	var findCollection = function(Model, query, res, callback, callback_error)
 	{
 		var params = query.params;
-		params.is_active = true;
+		if(params.is_active == undefined) params.is_active = true;
 
 		var search = Model.find(params);
 		if(query.selection) search = search.select(query.selection);
