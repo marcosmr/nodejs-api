@@ -63,6 +63,8 @@ function get(config, errors, logger)
 			html: html,
 			text: ""
 		};
+		if(params.cc) mail.cc = params.cc;
+		if(params.bcc) mail.bcc = params.bcc;
 
 		transport.sendMail(mail, function(error, response)
 		{
