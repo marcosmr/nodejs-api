@@ -49,13 +49,36 @@ function get(config, errors, logger)
 		});
 	}
 
+	var listMedia = function(params, res, callback, callback_error)
+	{
+		var options =
+		{
+			Bucket: container,
+			Prefix: params.prefix,
+			Delimiter: "/"
+		}
+
+		s3.listObjects(options, function(error, data)
+		{
+			if(error)
+			{
+				logger.error(error);
+				if(callback_error) callback_error(error);
+				else errors(res, 'upload_error');
+				return;
+			}
+
+			callback(data.Contents);
+		});
+	}
+
 	var deleteMedia = function(params, res, callback, callback_error)
 	{
 		var options =
 		{
 			Bucket: container,
 			Key: getPath(params.filename)
-		}
+		};
 
 		s3.deleteObject(options, function(error, data)
 		{
@@ -76,6 +99,7 @@ function get(config, errors, logger)
 	}
 
 	component.upload = uploadMedia;
+	component.list = listMedia;
 	component.delete = deleteMedia;
 	component.path = getPath;
 
