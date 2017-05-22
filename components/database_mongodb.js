@@ -37,6 +37,11 @@ function get(config, errors, logger)
 		});
 	}
 
+	var toId = function(id)
+	{
+		return mongoose.Types.ObjectId(id);
+	}
+
 	var newObject = function(Model, data, res, callback, callback_error)
 	{
 		var object = new Model(data);
@@ -256,6 +261,7 @@ function get(config, errors, logger)
 
 	component.db = mongoose;
 	component.connect = connectDatabase;
+	component.toId = toId;
 	component.newObject = newObject;
 	component.existsObject = existsObject;
 	component.findObject = findObject;
