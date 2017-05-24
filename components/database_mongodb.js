@@ -75,7 +75,8 @@ function get(config, errors, logger)
 		if(query.selection) search = search.select(query.selection);
 		if(query.population) search = search.populate(query.population);
 		if(query.sort) search = search.sort(query.sort);
-		if(query.limit) search = search.limit(query.limit);
+		if(query.limit) search = search.limit(Number(query.limit));
+		if(query.skip) search = search.skip(Number(query.skip));
 
 		search.exec(function(error, object)
 		{
@@ -120,7 +121,8 @@ function get(config, errors, logger)
 		if(query.selection) search = search.select(query.selection);
 		if(query.population) search = search.populate(query.population);
 		if(query.sort) search = search.sort(query.sort);
-		if(query.limit) search = search.limit(query.limit);
+		if(query.limit) search = search.limit(Number(query.limit));
+		if(query.skip) search = search.skip(Number(query.skip));
 
 		search.exec(function(error, collection)
 		{
