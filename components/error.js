@@ -168,6 +168,15 @@ function get(config, custom_errors)
 				es: "Ha ocurrido un error al subir el recurso"
 			}
 		},
+		request_error:
+		{
+			code: 500,
+			msg:
+			{
+				en: "request error",
+				es: "Ha ocurrido un error al solicitar el recurso web"
+			}
+		},
 		conversion_error:
 		{
 			code: 500,
