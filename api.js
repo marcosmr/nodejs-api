@@ -57,6 +57,9 @@ function init(server, path)
 	var form = require(libpath + '/form');
 	app.form = form.get(config, errors, logger);
 
+	var requester = require(libpath + '/requester');
+	app.requester = requester.get(config, errors, logger);
+
 	var converter = require(libpath + '/converter');
 	app.converter = converter.get(config, errors, logger);
 
