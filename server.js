@@ -38,7 +38,7 @@ function init(path)
 		{
 			res.header('Access-Control-Allow-Origin', '*');
 			res.header('Access-Control-Allow-Methods', 'POST, GET');
-			res.header('Access-Control-Allow-Headers', 'Origin, Authorization, X-Requested-With, Content-Type, Accept, x-sort, x-skip, x-limit');
+			res.header('Access-Control-Allow-Headers', 'Origin, Content-Type, Authorization, Accept, X-Requested-With, x-sort, x-skip, x-limit, x-filters');
 			next();
 		});
 
