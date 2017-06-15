@@ -27,18 +27,25 @@ function get(database)
 
 		if( this.isNew || this.isModified('password') )
 		{
-			bcrypt.genSalt(10, function(error, salt)
+			if(user.password)
 			{
-				if(error) return next(error);
-
-				bcrypt.hash(user.password, salt, function(error, hash)
+				bcrypt.genSalt(10, function(error, salt)
 				{
 					if(error) return next(error);
 
-					user.password = hash;
-					next();
+					bcrypt.hash(user.password, salt, function(error, hash)
+					{
+						if(error) return next(error);
+
+						user.password = hash;
+						next();
+					});
 				});
-			});
+			}
+			else
+			{
+				return next();
+			}
 		}
 		else
 		{

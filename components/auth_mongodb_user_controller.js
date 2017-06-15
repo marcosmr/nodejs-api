@@ -214,7 +214,7 @@ function get(model, errors, logger)
 
 			if(user)
 			{
-				callback(user);
+				callback(user, false);
 			}
 			else
 			{
@@ -233,7 +233,7 @@ function get(model, errors, logger)
 						return;
 					}
 
-					callback(user);
+					callback(user, true);
 				});
 			}
 		});
@@ -299,7 +299,7 @@ function get(model, errors, logger)
 	controller.recover = recoverUser;
 	controller.token = tokenUser;
 	controller.login = loginUser;
-	controller.social_login = socialLoginUser;
+	controller.social = socialLoginUser;
 	controller.delete = deleteUser;
 
 	return controller;
