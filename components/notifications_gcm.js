@@ -40,12 +40,13 @@ function get(config, errors, logger)
 
 		var notification =
 		{
-			to: params.to,
 			data: data,
 			notification: notification_data,
 			priority: "high",
 			content_available: true
 		};
+		if(params.to) notification.to = params.to;
+		if(params.ids) notification.registration_ids = params.ids;
 
 		var request = https.request(options, function(response)
 		{
