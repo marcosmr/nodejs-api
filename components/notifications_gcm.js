@@ -27,6 +27,12 @@ function get(config, errors, logger)
 
 	var sendNotification = function(params, callback)
 	{
+		if(!params.to)
+		{
+			if(!params.ids) return;
+			if(params.ids.length == 0) return;
+		}
+
 		var data = params.data;
 
 		var notification_data =
