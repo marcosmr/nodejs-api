@@ -186,14 +186,18 @@ function get(config, errors, logger)
 	{
 		var createAccount = function(params, res, callback, callback_error)
 		{
+			var token = params.token;
+			var name = params.name;
+			var email = params.email;
+
 			var data =
 			{
-				name: params.name,
-				email: params.email,
+				name: name,
+				email: email,
 				payment_sources:
 				[
 					{
-						token_id: params.token,
+						token_id: token,
 						type: "card"
 					}
 				]
@@ -213,10 +217,11 @@ function get(config, errors, logger)
 		{
 			var conekta = params.conekta;
 			var card = params.card;
+			var token = params.token;
 
 			var data =
 			{
-				token_id: params.token,
+				token_id: token,
 				type: "card"
 			}
 
@@ -238,6 +243,61 @@ function get(config, errors, logger)
 			{
 				path: '/customers/' + conekta,
 				method: 'GET'
+			};
+
+			sendRequest(options, res, callback, callback_error);
+		}
+
+		var pay = function(params, res, callback, callback_error)
+		{
+			var conekta = params.conekta;
+			var card = params.card;
+			var name = params.name;
+			var email = params.email;
+			var phone = params.phone;
+			var total = params.total;
+			var currency = params.currency;
+			var items = params.items;
+			var shipping = params.shipping;
+			var shipping_customer = params.shipping_customer;
+
+			var data =
+			{
+				currency: params.currency,
+				customer_info:
+				{
+					customer_id: conekta,
+					name: name,
+					email: email,
+					phone: phone
+				},
+				line_items: items,
+				charges:
+				[{
+					payment_method:
+					{
+						payment_source_id: card,
+						type: "card"
+					},
+					amount: total
+				}]
+			};
+
+			if(shipping)
+			{
+				data.shipping_lines = [shipping];
+			}
+
+			if(shipping_customer)
+			{
+				data.shipping_contact = shipping_customer;
+			}
+
+			var options =
+			{
+				path: '/orders',
+				method: 'POST',
+				data: data
 			};
 
 			sendRequest(options, res, callback, callback_error);
@@ -277,7 +337,8 @@ function get(config, errors, logger)
 
 					if(response.object == "error")
 					{
-						logger.error(response.message);
+						var detail = response.details[0];
+						if(detail) logger.error(detail.message);
 
 						if(callback_error)
 						{
@@ -325,6 +386,7 @@ function get(config, errors, logger)
 		component.createAccount = createAccount;
 		component.updateAccount = updateAccount;
 		component.getAccount = getAccount;
+		component.pay = pay;
 	}
 
 	return component;
