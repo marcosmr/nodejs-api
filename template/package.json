@@ -1,0 +1,20 @@
+{
+	"name": "API",
+	"dependencies":
+	{
+		"express": "*",
+		"body-parser": "*",
+		"mongoose": "*",
+		"bluebird": "*",
+		"bcrypt": "*",
+		"base64url": "*",
+		"jwt-simple": "*",
+		"json2csv": "*",
+		"node-cron": "*",
+		"socket.io": "*",
+		"multer": "*",
+		"aws-sdk": "*",
+		"nodemailer": "*",
+		"sendgrid": "*"
+	}
+}
