@@ -339,6 +339,24 @@ function get(config, custom_errors)
 				es: "Se require el correo"
 			}
 		},
+		param_missing:
+		{
+			code: 422,
+			msg:
+			{
+				en: "param :field is missing",
+				es: "El parámetro :field es requerido"
+			}
+		},
+		param_format_incorrect:
+		{
+			code: 422,
+			msg:
+			{
+				en: "param format :field is incorrect",
+				es: "El formato del parámetro :field es incorrecto"
+			}
+		},
 		payment_card_declined:
 		{
 			code: 403,

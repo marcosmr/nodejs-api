@@ -43,7 +43,41 @@ function get(app, errors, logger)
 		return values;
 	}
 
+	var checkNumber = function(res, params, field)
+	{
+		var value = params[field];
+
+		if(isNaN(value))
+		{
+			errors(res, 'param_format_incorrect', null, {':field': field});
+			return false;
+		}
+
+		return true;
+	}
+
+	var checkArray = function(res, params, field)
+	{
+		var value = params[field];
+
+		if(!(value instanceof Array))
+		{
+			errors(res, 'param_format_incorrect', null, {':field': field});
+			return false;
+		}
+
+		if(value.length <= 0)
+		{
+			errors(res, 'param_missing', null, {':field': field});
+			return false;
+		}
+
+		return true;
+	}
+
 	component.params = getParams;
+	component.number = checkNumber;
+	component.array = checkArray;
 
 	return component;
 }
