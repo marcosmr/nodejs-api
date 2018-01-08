@@ -4,6 +4,7 @@ function get(config, errors, logger)
 
 	var apikey = config.apikey;
 	var accountId = config.accountId;
+	var isProduction = config.production;
 
 
 	if(!apikey)
@@ -18,10 +19,17 @@ function get(config, errors, logger)
 		process.exit(1);
 	}
 
-	var key = new Buffer(config.apikey).toString('base64');
+	//class
+	var Openpay = require('openpay');
+	//instantiation
+	var openpay = new Openpay( apikey, accountId);
 
-	var https = require('https');
 
+	if(isProduction){
+		openpay.setProductionReady(true);
+	}
+
+	
 
 	var createAccount = function(params, res, callback, callback_error)
 	{
@@ -43,41 +51,7 @@ function get(config, errors, logger)
 		sendRequest(options, res, callback, callback_error);
 	}
 
-	var sendRequest = function(params, res, callback, callback_error)
-	{
-		var options =
-		{
-			host: 'api.openpay.mx',
-			path: '/v1/' + accountId + params.path,
-			method: params.method,
-			headers:
-			{
-				'Content-Type': 'application/json;charset=utf-8',
-				'Authorization': 'Basic ' + key
-			}
-		};
 
-		var request = https.request(options, function(response)
-		{
-			var content = "";
-			response.setEncoding('utf8');
-			response.on('data', function(part){ content += part; });
-			response.on('error', function(error)
-			{
-				logger.error(error);
-				if(callback_error) callback_error(error);
-				else errors(res, 'payment_error')
-			});
-			response.on('end', function()
-			{
-				var response = JSON.parse(content);
-				callback(response);
-			});
-		});
-
-		request.write(JSON.stringify(params.data));
-		request.end();
-	}
 
 	component.createAccount = createAccount;
 
