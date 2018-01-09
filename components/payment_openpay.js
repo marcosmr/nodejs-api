@@ -33,22 +33,24 @@ function get(config, errors, logger)
 
 	var createAccount = function(params, res, callback, callback_error)
 	{
-		var name = params.name;
-		var email = params.email;
-		var token = params.token;
-
 		var options =
 		{
-			path: '/customers',
-			method: 'POST',
-			data:
-			{
-				name: name,
-				email: email
-			}
+			requires_account: false,			
+			name: params.name,
+			email: params.email
 		};
 
-		sendRequest(options, res, callback, callback_error);
+		if(params.lastname) {
+			options.lastname = params.lastname;
+		}
+
+		openpay.customers.create(customerRequest, function(error, customer) {
+		  if(error) {
+		  	callback_error(error);
+		  } else {
+		  	callback(customer);
+		  }
+		});
 	}
 
 
