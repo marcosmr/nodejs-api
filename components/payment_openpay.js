@@ -22,7 +22,7 @@ function get(config, errors, logger)
 	//class
 	var Openpay = require('openpay');
 	//instantiation
-	var openpay = new Openpay( apikey, accountId);
+	var openpay = new Openpay(accountId, apikey);
 
 
 	if(isProduction){
@@ -33,7 +33,7 @@ function get(config, errors, logger)
 
 	var createAccount = function(params, res, callback, callback_error)
 	{
-		var options =
+		var customerRequest =
 		{
 			requires_account: false,			
 			name: params.name,
@@ -41,7 +41,7 @@ function get(config, errors, logger)
 		};
 
 		if(params.lastname) {
-			options.lastname = params.lastname;
+			customerRequest.lastname = params.lastname;
 		}
 
 		openpay.customers.create(customerRequest, function(error, customer) {
