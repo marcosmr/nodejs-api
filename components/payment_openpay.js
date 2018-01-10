@@ -46,7 +46,19 @@ function get(config, errors, logger)
 
 		openpay.customers.create(customerRequest, function(error, customer) {
 		  if(error) {
-		  	callback_error(error);
+				if(callback_error) { // llamamos callback de error o respondemos
+					callback_error(error);
+				} else {
+
+					var response = {
+						code: error.http_code,
+						msg: error.description + ' ( ' + error.error_code + ' )'
+					};
+
+					if(res) res.status(error.http_code).send(response);
+					return error;
+				}
+
 		  } else {
 		  	callback(customer);
 		  }
@@ -59,15 +71,46 @@ function get(config, errors, logger)
 			'token_id': params.token_id,
 			'device_session_id': params.device_session_id,
 		}
-		console.log(cardRequest);
+		//console.log(cardRequest);
 		openpay.customers.cards.create(params.clienteid, cardRequest, function (error, card) {
 			if (error) {
-				var response = {'error': error};
-				res.send(response);
+				if(callback_error) { // llamamos callback de error o respondemos
+					callback_error(error);
+				} else {
+
+					var response = {
+						code: error.http_code,
+						msg: error.description + ' ( ' + error.error_code + ' )'
+					};
+
+					if(res) res.status(error.http_code).send(response);
+				}
+				return error;
+			}
+			callback(card)
+		});
+	}
+
+	var listCardsByUser = function (params, res, callback, callback_error){
+
+		//console.log(cardRequest);
+		openpay.customers.cards.list(params.clienteid, function (error, list) {
+			if (error) {
+				if(callback_error) { // llamamos callback de error o respondemos
+					callback_error(error);
+				} else {
+
+					var response = {
+						code: error.http_code,
+						msg: error.description + ' ( ' + error.error_code + ' )'
+					};
+
+					if(res) res.status(error.http_code).send(response);
+				}
+				return error;
 			}
 
-			var response = {'card': card};
-			res.send(response);
+			callback(list) // exito devolvemos array de cards
 
 		});
 	}
@@ -76,6 +119,7 @@ function get(config, errors, logger)
 
 	component.createAccount = createAccount;
 	component.saveCard = saveCard;
+	component.listCardsByUser = listCardsByUser;
 
 	return component;
 }
