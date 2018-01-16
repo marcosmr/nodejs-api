@@ -91,6 +91,28 @@ function get(config, errors, logger)
 		});
 	}
 
+	var deleteCard = function (params, res, callback, callback_error){
+
+		openpay.customers.cards.delete(params.clienteId, params.cardId, function (error, response) {
+			if (error) {
+				if(callback_error) { // llamamos callback de error o respondemos
+					callback_error(error);
+				} else {
+
+					var response = {
+						code: error.http_code,
+						msg: error.description + ' ( ' + error.error_code + ' )'
+					};
+
+					if(res) res.status(error.http_code).send(response);
+				}
+				return error;
+			}
+			callback(response);
+		});
+
+	}
+
 	var listCardsByUser = function (params, res, callback, callback_error){
 
 		//console.log(cardRequest);
@@ -120,6 +142,7 @@ function get(config, errors, logger)
 	component.createAccount = createAccount;
 	component.saveCard = saveCard;
 	component.listCardsByUser = listCardsByUser;
+	component.deleteCard = deleteCard;
 
 	return component;
 }
