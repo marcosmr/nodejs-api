@@ -24,7 +24,9 @@ function get(config, errors, logger)
 
 	var connectDatabase = function()
 	{
-		mongoose.connect(server, function(error)
+		mongoose.connect(server, {
+			uri_decode_auth: true 
+		}, function(error)
 		{
 			if(error)
 			{
