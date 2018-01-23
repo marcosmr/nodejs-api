@@ -10,7 +10,7 @@
 		"express": "*",
 		"json2csv": "*",
 		"jwt-simple": "*",
-		"mongoose": "*",
+		"mongoose": "4.13.8",
 		"multer": "*",
 		"node-cron": "*",
 		"nodemailer": "2.7.0",
