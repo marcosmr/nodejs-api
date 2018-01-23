@@ -2,19 +2,20 @@
 	"name": "API",
 	"dependencies":
 	{
-		"express": "*",
-		"body-parser": "*",
-		"mongoose": "*",
-		"bluebird": "*",
-		"bcrypt": "*",
-		"base64url": "*",
-		"jwt-simple": "*",
-		"json2csv": "*",
-		"node-cron": "*",
-		"socket.io": "*",
-		"multer": "*",
 		"aws-sdk": "*",
-		"nodemailer": "*",
-		"sendgrid": "*"
+		"base64url": "*",
+		"bcrypt": "*",
+		"bluebird": "*",
+		"body-parser": "*",
+		"express": "*",
+		"json2csv": "*",
+		"jwt-simple": "*",
+		"mongoose": "*",
+		"multer": "*",
+		"node-cron": "*",
+		"nodemailer": "2.7.0",
+		"openpay": "^1.0.2",
+		"sendgrid": "*",
+		"socket.io": "*"
 	}
 }
