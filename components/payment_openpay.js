@@ -159,9 +159,11 @@ function get(config, errors, logger)
 
 		if(params.method == 'card') { chargeRequest.cvv2 = params.cvv; }
 
-		if(!params.capture) { chargeRequest.capture = false; } // preautorize
+		if(params.preauthorize) { chargeRequest.capture = false; } // preautorize
 
-		openpay.charges.create(params.customerId, chargeRequest, function(error, charge) {
+		//console.log("cargo:", chargeRequest);
+
+		openpay.customers.charges.create(params.customerId, chargeRequest, function(error, charge) {
 
 			if (error) {
 				if(callback_error) { // llamamos callback de error o respondemos
