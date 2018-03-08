@@ -7,6 +7,15 @@ function get(config, errors, logger)
 	var isProduction = config.production;
 	var currency = config.currency;
 
+	var values = {
+		cobro: {
+			comision_transferencia: 8.0,
+			comision_cobro: 2.5,
+			porcentaje_gateway: 2.9,
+			iva: 16.0
+		}
+	}
+
 
 	if(!apikey)
 	{
@@ -185,6 +194,23 @@ function get(config, errors, logger)
 		});
 	}
 
+	var getTotalAmount = function (presupuesto) {
+		var total = 0; 
+		var costo = parseFloat(presupuesto);
+		var parcial1 = costo + values.cobro.comision_transferencia + values.cobro.comision_cobro; // costo enviar dinero + cobrado huixache y diseñador
+		var impuesto_comercio = (parcial1 * values.cobro.iva) / 100; // impuesto de huixache 
+		var comision_openpay = (((parcial1 + impuesto_comercio) * values.cobro.porcentaje_gateway) / 100) ;  // comisiones de openpay
+		//comision_openpay += ((comision_openpay * values.cobro.porcentaje_gateway) / 100);  // comisiones de openpay (ajustando porcentaje)
+		var impuesto_openpay = (comision_openpay * values.cobro.iva) / 100; // impuesto de openpay 
+		
+		//console.log('valores: ', costo, parcial1, impuesto_comercio, comision_openpay, impuesto_openpay)
+		total = parcial1 + impuesto_comercio + comision_openpay + impuesto_openpay ;
+		total = total * 1.0010959;
+		total = Math.round(total*100)  / 100; // dos dígitos
+
+		return total;
+	}
+
 
 
 	component.createAccount = createAccount;
@@ -192,6 +218,7 @@ function get(config, errors, logger)
 	component.listCardsByUser = listCardsByUser;
 	component.deleteCard = deleteCard;
 	component.processPaymentByUser = processPaymentByUser;
+	component.getTotalAmount = getTotalAmount;
 
 	return component;
 }
