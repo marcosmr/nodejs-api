@@ -14,7 +14,7 @@ function get(config, errors, logger)
 	var https = require('https');
 	var options =
 	{
-		host: "gcm-http.googleapis.com",
+		host: "fcm.googleapis.com/fcm/",
 		path: "/gcm/send",
 		method: "POST",
 		headers:
