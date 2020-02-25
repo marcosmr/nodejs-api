@@ -7,15 +7,15 @@ function get(config, errors, logger)
 
 	if(!apikey)
 	{
-		logger.error("gcm api key not found");
+		logger.error("fcm api key not found");
 		process.exit(1);
 	}
 
 	var https = require('https');
 	var options =
 	{
-		host: "fcm.googleapis.com/fcm/",
-		path: "/gcm/send",
+		host: "fcm.googleapis.com",
+		path: "/fcm/send",
 		method: "POST",
 		headers:
 		{
@@ -23,10 +23,13 @@ function get(config, errors, logger)
 			"Authorization": apikey
 		}
 	};
+	
 
 
 	var sendNotification = function(params, callback)
 	{
+		
+		
 		if(!params.to)
 		{
 			if(!params.ids) return;
@@ -53,7 +56,8 @@ function get(config, errors, logger)
 		};
 		if(params.to) notification.to = params.to;
 		if(params.ids) notification.registration_ids = params.ids;
-
+		
+	
 		var request = https.request(options, function(response)
 		{
 			var content = "";
@@ -61,14 +65,15 @@ function get(config, errors, logger)
 			response.on("data", function(part){ content += part; });
 			response.on("error", function(error){ logger.error(error); });
 			response.on("end", function()
-			{
+			{	
 				var response = JSON.parse(content);
-				if(response.failure == 1) logger.error(response.results[0].error);
+				if(response.failure ) logger.error(JSON.stringify(response));
 				callback(response);
 			});
 		});
 		request.write(JSON.stringify(notification));
 		request.end();
+		callback({});
 	}
 
 	component.send = sendNotification;
